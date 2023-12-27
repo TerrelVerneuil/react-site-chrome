@@ -1,0 +1,61 @@
+# Dependency directories
+/node_modules/
+/bower_components/
+
+# Build output directories
+/build/
+/dist/
+/out/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and Editor folders
+/.idea/
+/.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Log files
+*.log
+*.tmp
+*.temp
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional: MacOS generated files
+.AppleDouble
+.LSOverride
+
+# Optional: Windows generated file
+ehthumbs.db
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Other common ignores
+*.pid
+*.pid.lock
+*.seed
+*.pid.db
+*.pid.lock.db
+*.heapdump
+*.swp
+*.lock
+*.DS_Store
+*.pem

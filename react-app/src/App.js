@@ -1,25 +1,44 @@
-// Assuming you're using Firebase for authentication
-import { useState } from 'react';
-import { auth } from './firebaseConfig'; // import your Firebase configuration
+import React, { useState } from 'react';
+import './App.css';
+//add some firebase functionality to work with the database
 
-function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function App() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleLogin = async () => {
-        try {
-            await auth.signInWithEmailAndPassword(email, password);
-            // Handle successful login
-        } catch (error) {
-            // Handle login error
-        }
-    };
+  const handleLogin = (event) => {
+    event.preventDefault(); // Prevents the default page reload on form submit
+    console.log('Logging in with:', email, password);
+    // Here, you can add logic to handle the authentication
+  };
 
-    return (
-        <div>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button onClick={handleLogin}>Login</button>
-        </div>
-    );
+  return (
+    <div className="App">
+      <header className="App-header">
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </header>
+    </div>
+  );
 }
+
+export default App;

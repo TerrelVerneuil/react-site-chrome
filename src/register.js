@@ -14,7 +14,6 @@ function Register() {
     event.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
-        // Registration successful
         console.log('Registered with:', userCredential.user);
         setMessage('Successfully Registered');
 
@@ -35,11 +34,12 @@ function Register() {
 
   return (
     <div>
-      <h2>Register</h2>
+      
       {message && <div id="message">{message}</div>}
       {errorMessage && <div id="error">{errorMessage}</div>}
       <form onSubmit={handleRegister}>
         <div>
+        <h2>Register</h2>
           <input
             type="text"
             value={username}

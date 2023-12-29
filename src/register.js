@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { auth, db} from './firebaseConfig'; // Adjust the path as per your file structure
+import { auth, db } from './firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -10,7 +10,6 @@ function Register() {
   const [errorMessage, setErrorMessage] = useState('');
   const [message, setMessage] = useState('');
 
-  
   const handleRegister = (event) => {
     event.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
@@ -19,16 +18,18 @@ function Register() {
         console.log('Registered with:', userCredential.user);
         setMessage('Successfully Registered');
 
-        // Add user to the database
-        const userDoc = {
+        // Add user to the database using UID as the document ID
+        const userRef = doc(db, 'users', userCredential.user.uid);
+        await setDoc(userRef, {
           uid: userCredential.user.uid,
           email: userCredential.user.email,
-        };
-        await addDoc(collection(db, 'users'), userDoc);
+          username: username,
+        });
       })
       .catch((error) => {
         // Error checking
-        setMessage(`Error: ${error.message}`);
+        setErrorMessage(error.message);
+        setMessage('ERROR');
       });
   };
 
@@ -36,38 +37,37 @@ function Register() {
     <div>
       <h2>Register</h2>
       {message && <div id="message">{message}</div>}
+      {errorMessage && <div id="error">{errorMessage}</div>}
       <form onSubmit={handleRegister}>
         <div>
-      <input
-          type="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-          required
-        />
-        </div>
-
-        <div>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            required
+          />
         </div>
         <div>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
         </div>
         <button type="submit">Register</button>
       </form>
-      
     </div>
   );
 }

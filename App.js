@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
 import './App.css';
 import Register from './register'; // Import the Register component
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebaseConfig'; 
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showRegister, setShowRegister] = useState(false); // New state to toggle between login and register
-  const [message, setMessage] = useState('');
-
+  const [showLogin, setShowLogin] = useState(false);
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('Logged in with:', userCredential.user)
-      
-      setMessage('welcome,', userCredential.user)
-      // Perform any additional actions upon successful login here
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+      onLoginSuccess();
     } catch (error) {
-              setMessage(`Error: ${error.message}`);
-
+      console.error("Authentication error:", error);
     }
   };
 
@@ -31,25 +24,19 @@ function App() {
         {showRegister ? (
           <Register />
         ) : (
-          
           <form onSubmit={handleLogin}>
             <div>
-            {message && <div id="message">{message}</div>}
-            <h2>Login</h2>
-            
+            <label>Email:</label>
             <input
               type="email"
-              placeholder='Email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-
               required
             />
           </div>
           <div>
-
+            <label>Password:</label>
             <input
-              placeholder='Password'
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

@@ -71,9 +71,25 @@ function App() {
     }
   };
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+
+        const userDocRef = doc(db, 'users', currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          setUsername(userDoc.data().username);
+        } else {
+      
+          setUsername('');
+        }
+      } else {
+        
+        setUser(null);
+        setUsername('');
+      }
     });
+  
     return unsubscribe; 
   }, []);
 

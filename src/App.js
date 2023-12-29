@@ -45,6 +45,7 @@ function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
+  const [message, setMessage] = useState('');
   const googleProvider = new GoogleAuthProvider();
   const handleGoogleSignIn = async () => {
     try {
@@ -84,11 +85,14 @@ function App() {
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
         setUsername(userDoc.data().username);
+      }else{
+        setMessage("Error: That does not match our records. ")
       }
       setEmail('');
       setPassword('');
     } catch (error) {
       console.error("Error during login:", error.message);
+      setMessage(`Login failed: ${error.message}`);
     }
   };
 
@@ -109,6 +113,7 @@ function App() {
         ) : (
           <form onSubmit={handleLogin}>
             <div>
+              
               <h2>Login</h2>
               <input
                 type="email"
@@ -128,6 +133,7 @@ function App() {
               />
             </div>
             <button type="submit">Login</button>
+            <p>{message}</p>
           </form>
         )}
         <button onClick={() => setShowRegister(!showRegister)}>

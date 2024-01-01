@@ -23,6 +23,7 @@ function Register() {
           uid: userCredential.user.uid,
           email: userCredential.user.email,
           username: username,
+          password: password
         });
       })
       .catch((error) => {

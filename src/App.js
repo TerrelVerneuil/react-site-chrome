@@ -72,7 +72,7 @@ function App() {
       setLoading(false);
     });
   
-    return unsubscribe; // Unsubscribe on unmount
+    return unsubscribe; 
   }, []);
   
 

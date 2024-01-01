@@ -1,0 +1,5 @@
+{
+    "rules": {
+        "no-undef": "off" // Disable the rule for all files
+    }
+}

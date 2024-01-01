@@ -12,10 +12,12 @@ import {
 import { auth, db } from './firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { setDoc } from 'firebase/firestore';
+import LoadingSpinner from './loader';
 
 //dashboard component to generate the dashboard specifically for user
 
-
+//we want the react page to send messages to the extension
+//to either login or request data.
 
 function App() {
   const [email, setEmail] = useState('');
@@ -25,6 +27,8 @@ function App() {
   const [username, setUsername] = useState('');
   const [message, setMessage] = useState('');
   const googleProvider = new GoogleAuthProvider();
+
+  const [loading,setLoading] = useState(true);
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -50,26 +54,27 @@ function App() {
   };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
       if (currentUser) {
         setUser(currentUser);
-
+  
         const userDocRef = doc(db, 'users', currentUser.uid);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
           setUsername(userDoc.data().username);
         } else {
-      
           setUsername('');
         }
       } else {
-        
         setUser(null);
         setUsername('');
       }
+      setLoading(false);
     });
   
-    return unsubscribe; 
+    return unsubscribe; // Unsubscribe on unmount
   }, []);
+  
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -94,16 +99,19 @@ function App() {
     await signOut(auth);
     setUsername('');
   };
-  //if user login works, then generate the dashboard form
+  //this is if user happens to refresh the page
+  if(loading){
+    return <LoadingSpinner />
+  }
+  ///if user login works, then generate the dashboard form
   if (user) {
     return <Dashboard username={username} onLogout={handleLogout} />;
-  }
-
+  }else{
   return (
     <div className="App">
       <header className="App-header">
         {showRegister ? (
-          <Register />
+          <Register  />
         ) : (
           <form onSubmit={handleLogin}>
             <div>
@@ -137,6 +145,7 @@ function App() {
       </header>
     </div>
   );
+}
 }
 
 export default App;
